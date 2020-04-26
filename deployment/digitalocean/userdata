@@ -1,0 +1,17 @@
+#cloud-config
+
+packages:
+    - curl
+    - git
+    - openssl
+
+runcmd:
+    - sudo mkdir -p /analytics/nginx-ssl/
+    - sudo curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf -o /analytics/nginx-ssl/options-ssl.conf
+    - sudo openssl dhparam -out /analytics/nginx-ssl/analytics.dhparam.pem 4096
+    - sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    - sudo chmod +x /usr/local/bin/docker-compose
+    - sudo docker-compose --version
+    - sudo git clone https://github.com/edwardfward/analytics-jupyterhub.git /analytics/
+    - sudo chmod +x /analytics/setup.sh
+    - sudo /analytics/setup.sh
